@@ -1,0 +1,2 @@
+Experimentation around Authorization, looking at CanCan and a few others... trying to figure
+out the simplest thing that will work... without roles... just access to a resource by a user.
