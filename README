@@ -1,2 +1,26 @@
 Experimentation around Authorization, looking at CanCan and a few others... trying to figure
 out the simplest thing that will work... without roles... just access to a resource by a user.
+
+
+What these need:
+
+model
+=====
+some mixins to your model so that you can grant and revoke privileges
+
+
+controller
+==========
+ability to declaratively and programatically assert that current_user has a role
+some testing strategy to make these efficient.
+
+CanCan handles and exception thrown in the base controller, which seems to be nice solution.
+
+other ones have the ability to require some access control has been defined explicitly
+
+
+
+view -- view helpers
+====================
+
+  These are basically authorization checks that assume the "current_user".
