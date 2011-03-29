@@ -16,7 +16,7 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "allow" do
-    @user.allow!(:access, @home)
+    @user.grant!(:access, @home)
     assert @user.can?(:access, @home)
   end
 
@@ -25,62 +25,62 @@ class UserTest < ActiveSupport::TestCase
     assert !@user.can?(:access, @home)
     assert !@user.can?(:burn_down, @home)
 
-    @user.allow!(:access, @home)
+    @user.grant!(:access, @home)
     assert @user.can?(:access, @home)
     assert !@user.can?(:burn_down, @home)
 
-    @user.allow!(:burn_down, @home)
+    @user.grant!(:burn_down, @home)
     assert @user.can?(:access, @home)
     assert @user.can?(:burn_down, @home)
   end
 
   test "allow twice" do
-    @user.allow!(:access, @home)
+    @user.grant!(:access, @home)
 
     assert @user.can?(:access, @home)
     assert !@user.can?(:access, @office)
 
-    @user.allow!(:access, @home)
+    @user.grant!(:access, @home)
 
     assert @user.can?(:access, @home)
     assert !@user.can?(:access, @office)
   end
 
   test "allow different direct object" do
-    @user.allow!(:access, @home)
+    @user.grant!(:access, @home)
 
     assert @user.can?(:access, @home)
     assert !@user.can?(:access, @office)
 
-    @user.allow!(:access, @office)
+    @user.grant!(:access, @office)
 
     assert @user.can?(:access, @home)
     assert @user.can?(:access, @office)
   end
 
   test "deny on allowed resource" do
-    @user.allow!(:access, @home)
+    @user.grant!(:access, @home)
     assert @user.can?(:access, @home)
 
-    @user.deny!(:access, @home)
+    @user.revoke!(:access, @home)
     assert !@user.can?(:access, @home)
   end
 
-  test "deny! on resource already denied" do
-    @user.deny!(:access, @office)
+  test "revoke! on resource already denied" do
+    @user.revoke!(:access, @office)
     assert !@user.can?(:access, @office)
   end
 
   test "scales?" do
     n       = 100
     records = 100
-    records.times { |i| @user.allow!(i, @home) }
+    records.times { |i| @user.grant!(i, @home) }
     t1 = Benchmark.measure { n.times { @user.can?(1, @home) } }.real
-    records.times { |i| @user.allow!(i+records, @home) }
+    records.times { |i| @user.grant!(i+records, @home) }
     t2 = Benchmark.measure { n.times { @user.can?(500, @home) } }.real
-    records.times { |i| @user.allow!(i+2*records, @home) }
+    records.times { |i| @user.grant!(i+2*records, @home) }
     t3 = Benchmark.measure { n.times { @user.can?(500, @home) } }.real
-    records.times { |i| @user.allow!(i+3*records, @home) }
+    records.times { |i| @user.grant!(i+3*records, @home) }
     t4 = Benchmark.measure { n.times { @user.can?(500, @home) } }.real
     assert t2 < 2*t1, "increasing number of permissions appears linear"
     assert t3 < 2*t1, "increasing number of permissions appears linear"
@@ -88,43 +88,5 @@ class UserTest < ActiveSupport::TestCase
   end
 
 
-  test "EssenceOfAuthorization.restrict" do
-
-    EssenceOfAuthorization.restrict_subject User, :access, Proc.new { |subject, direct_object| direct_object != @office }
-    begin
-      assert_raises do
-        @user.allow!(:access, @office)
-      end
-      @user.allow!(:access, @home)
-
-      assert !@user.can?(:access, @office)
-      assert @user.can?(:access, @home)
-
-    ensure
-      EssenceOfAuthorization.restrict_subject User, :access, nil
-    end
-
-  end
-
-  test "before_allow" do
-
-    EssenceOfAuthorization.restrict_subject User, :access, Proc.new { |subject, direct_object| subject == @admin && direct_object == @office }
-    begin
-      assert_raises do
-        @user.allow!(:access, @office)
-      end
-      assert_raises do
-        @user.allow!(:access, @home)
-      end
-      @admin.allow!(:access, @office)
-
-      assert !@user.can?(:access, @office)
-      assert !@user.can?(:access, @home)
-      assert @admin.can?(:access, @office)
-      assert !@admin.can?(:access, @home)
-    ensure
-      EssenceOfAuthorization.restrict_subject User, :access, nil
-    end
-  end
 
 end

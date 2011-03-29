@@ -3,7 +3,7 @@ class EssenceOfAuthorization::Authorization < ActiveRecord::Base
   belongs_to :subject, :polymorphic => true
   belongs_to :direct_object, :polymorphic => true
 
-  def self.allow!(subject, verb, direct_object)
+  def self.grant!(subject, verb, direct_object)
     if query(subject, verb, direct_object).count == 0
       EssenceOfAuthorization::Authorization.create!(:subject=>subject, :verb=>verb, :direct_object=>direct_object)
     end

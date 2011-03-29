@@ -1,20 +1,22 @@
+
+
 module EssenceOfAuthorization
-  def self.restrict_subject(subject_class, verb, p)
-    @@restrictions                ||= {}
-    @@restrictions[subject_class] ||= {}
-    if p.nil?
-      @@restrictions[subject_class][verb] = []
-    else
-      @@restrictions[subject_class][verb] ||= []
-      @@restrictions[subject_class][verb].push p
+
+  def self.approve_grants(subject_class, verb, direct_object_class, &block)
+    @approve_grants ||= []
+    @approve_grants <<
+          EssenceOfAuthorization::Approval.new(subject_class, verb, direct_object_class, &block)
+  end
+
+  def self.allow_grant?(subject, verb, direct_object)
+    return true if @approve_grants.nil?
+    @approve_grants.all? do |r|
+      r.approve?(subject, verb, direct_object)
     end
   end
 
-  def self.allow_allow?(subject, verb, direct_object)
-    return true if !EssenceOfAuthorization.class_variable_defined?(:@@restrictions) ||
-          @@restrictions.nil? || @@restrictions[subject.class].nil?
-    r = @@restrictions[subject.class]
-    (r[verb].nil? || r[verb].all? { |r| r.call(subject, direct_object) })
+  def self.allow_revoke?(subject, verb, direct_object)
+    return true;
   end
 
 

@@ -10,9 +10,9 @@ class ResourceTest < ActiveSupport::TestCase
 
   test "returns who can do something" do
     assert_equal [], @home.who_can?(:live)
-    @user.allow!(:live_at, @home)
+    @user.grant!(:live_at, @home)
     assert_equal [@user], @home.who_can?(:live_at)
-    @user.deny!(:live_at, @home)
+    @user.revoke!(:live_at, @home)
     assert_equal [], @home.who_can?(:live)
   end
 

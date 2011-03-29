@@ -1,6 +1,9 @@
 module EssenceOfAuthorization::Subject
 
-  class AllowNotAllowed<RuntimeError
+  class GrantNotAllowed<RuntimeError
+  end
+
+  class RevokeNotAllowed<RuntimeError
   end
 
   # Ask if this subject can do something to the designated object
@@ -8,18 +11,24 @@ module EssenceOfAuthorization::Subject
     EssenceOfAuthorization::Authorization.query(self, verb.to_s, direct_object).count > 0
   end
 
-  # Allow the user to do it.
-  # Does nothing if the user is already allowed to do it.
-  def allow!(verb, direct_object)
-    raise AllowNotAllowed unless EssenceOfAuthorization.allow_allow?(self, verb, direct_object)
-    EssenceOfAuthorization::Authorization.allow!(self, verb.to_s, direct_object)
+  def allow_grant?(verb, direct_object)
+    EssenceOfAuthorization.allow_grant?(self, verb.to_s, direct_object)
   end
 
-  # Deny the user from being allowed to do it
+  # Does nothing if the user is already allowed to do it.
+  def grant!(verb, direct_object)
+    raise GrantNotAllowed unless allow_grant?(verb, direct_object)
+    EssenceOfAuthorization::Authorization.grant!(self, verb.to_s, direct_object)
+  end
+
+  def allow_revoke?(verb, direct_object)
+    EssenceOfAuthorization.allow_revoke?(self, verb.to_s, direct_object)
+  end
+
   # Does nothing if the user already is denied.
-  def deny!(verb, direct_object)
+  def revoke!(verb, direct_object)
+    raise RevokeNotAllowed unless allow_revoke?(verb, direct_object)
     EssenceOfAuthorization::Authorization.query(self, verb.to_s, direct_object).destroy_all
   end
-
 
 end
