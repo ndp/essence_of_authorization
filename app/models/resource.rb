@@ -1,3 +1,3 @@
 class Resource < ActiveRecord::Base
-  include EssenceOfAuthorization::DirectObject
+  include EssenceOfAuthorization::Mixin::DirectObject
 end

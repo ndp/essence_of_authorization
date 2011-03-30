@@ -1,6 +1,9 @@
-
-
 module EssenceOfAuthorization
+  class GrantNotAllowed<RuntimeError
+  end
+
+  class RevokeNotAllowed<RuntimeError
+  end
 
   def self.approve_grants(subject_class, verb, direct_object_class, &block)
     @approve_grants ||= []
@@ -18,6 +21,5 @@ module EssenceOfAuthorization
   def self.allow_revoke?(subject, verb, direct_object)
     return true;
   end
-
 
 end

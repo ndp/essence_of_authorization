@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
 
-  include EssenceOfAuthorization::Subject
+  include EssenceOfAuthorization::Mixin::User
 
 end

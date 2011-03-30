@@ -1,12 +1,10 @@
 class EssenceOfAuthorization::Approval # < ActiveModel::Base
 
-  attr_reader :subject_class
   attr_reader :verb
   attr_reader :direct_object_class
   attr_reader :block
 
-  def initialize(subject_class, verb, direct_object_class, &block)
-    @subject_class       = subject_class
+  def initialize(verb, direct_object_class, &block)
     @verb                = verb
     @direct_object_class = direct_object_class
     @block               = block
@@ -21,7 +19,6 @@ class EssenceOfAuthorization::Approval # < ActiveModel::Base
   end
 
   def matches?(subject, verb, direct_object)
-    subject.class == @subject_class &&
           verb == @verb &&
           direct_object.class == @direct_object_class
   end

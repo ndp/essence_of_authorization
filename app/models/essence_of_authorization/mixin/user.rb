@@ -1,10 +1,4 @@
-module EssenceOfAuthorization::Subject
-
-  class GrantNotAllowed<RuntimeError
-  end
-
-  class RevokeNotAllowed<RuntimeError
-  end
+module EssenceOfAuthorization::Mixin::User
 
   # Ask if this subject can do something to the designated object
   def can?(verb, direct_object)

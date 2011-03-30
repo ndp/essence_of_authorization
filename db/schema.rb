@@ -13,16 +13,15 @@
 ActiveRecord::Schema.define(:version => 20110326030545) do
 
   create_table "authorizations", :force => true do |t|
-    t.integer "subject_id"
-    t.string  "subject_type"
+    t.integer "user_id"
     t.string  "verb"
     t.integer "direct_object_id"
     t.string  "direct_object_type"
   end
 
   add_index "authorizations", ["direct_object_id", "direct_object_type"], :name => "index_authorizations_on_direct_object_id_and_direct_object_type"
-  add_index "authorizations", ["subject_id", "subject_type", "verb", "direct_object_id", "direct_object_type"], :name => "all_index", :unique => true
-  add_index "authorizations", ["subject_id", "subject_type"], :name => "index_authorizations_on_subject_id_and_subject_type"
+  add_index "authorizations", ["user_id", "verb", "direct_object_id", "direct_object_type"], :name => "all_index", :unique => true
+  add_index "authorizations", ["user_id"], :name => "index_authorizations_on_user_id"
 
   create_table "resources", :force => true do |t|
     t.string   "name"

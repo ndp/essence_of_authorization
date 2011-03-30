@@ -14,8 +14,8 @@ class EssenceOfAuthorization::Authorization < ActiveRecord::Base
           :direct_object_id=> direct_object.id, :direct_object_type=> direct_object.class.name).map(&:subject)
   end
 
-  def self.query(subject, verb, direct_object)
-    where(:subject_id      => subject.id, :subject_type=> subject.class.name,
+  def self.query(user, verb, direct_object)
+    where(:user_id      => user.id,
           :verb            => verb,
           :direct_object_id=> direct_object.id, :direct_object_type=> direct_object.class.name)
   end

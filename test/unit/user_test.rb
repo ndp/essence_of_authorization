@@ -10,65 +10,65 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "initial states" do
-    assert !@user.can?(:access, @home)
+    assert !@user.can?(:access_user, @home)
     assert !@user.can?(:burn_down, @home)
-    assert !@user.can?(:access, @office)
+    assert !@user.can?(:access_user, @office)
   end
 
   test "allow" do
-    @user.grant!(:access, @home)
-    assert @user.can?(:access, @home)
+    @user.grant!(:access_user, @home)
+    assert @user.can?(:access_user, @home)
   end
 
 
   test "allow different permissions" do
-    assert !@user.can?(:access, @home)
+    assert !@user.can?(:access_user, @home)
     assert !@user.can?(:burn_down, @home)
 
-    @user.grant!(:access, @home)
-    assert @user.can?(:access, @home)
+    @user.grant!(:access_user, @home)
+    assert @user.can?(:access_user, @home)
     assert !@user.can?(:burn_down, @home)
 
     @user.grant!(:burn_down, @home)
-    assert @user.can?(:access, @home)
+    assert @user.can?(:access_user, @home)
     assert @user.can?(:burn_down, @home)
   end
 
   test "allow twice" do
-    @user.grant!(:access, @home)
+    @user.grant!(:access_user, @home)
 
-    assert @user.can?(:access, @home)
-    assert !@user.can?(:access, @office)
+    assert @user.can?(:access_user, @home)
+    assert !@user.can?(:access_user, @office)
 
-    @user.grant!(:access, @home)
+    @user.grant!(:access_user, @home)
 
-    assert @user.can?(:access, @home)
-    assert !@user.can?(:access, @office)
+    assert @user.can?(:access_user, @home)
+    assert !@user.can?(:access_user, @office)
   end
 
   test "allow different direct object" do
-    @user.grant!(:access, @home)
+    @user.grant!(:access_user, @home)
 
-    assert @user.can?(:access, @home)
-    assert !@user.can?(:access, @office)
+    assert @user.can?(:access_user, @home)
+    assert !@user.can?(:access_user, @office)
 
-    @user.grant!(:access, @office)
+    @user.grant!(:access_user, @office)
 
-    assert @user.can?(:access, @home)
-    assert @user.can?(:access, @office)
+    assert @user.can?(:access_user, @home)
+    assert @user.can?(:access_user, @office)
   end
 
   test "deny on allowed resource" do
-    @user.grant!(:access, @home)
-    assert @user.can?(:access, @home)
+    @user.grant!(:access_user, @home)
+    assert @user.can?(:access_user, @home)
 
-    @user.revoke!(:access, @home)
-    assert !@user.can?(:access, @home)
+    @user.revoke!(:access_user, @home)
+    assert !@user.can?(:access_user, @home)
   end
 
   test "revoke! on resource already denied" do
-    @user.revoke!(:access, @office)
-    assert !@user.can?(:access, @office)
+    @user.revoke!(:access_user, @office)
+    assert !@user.can?(:access_user, @office)
   end
 
   test "scales?" do
